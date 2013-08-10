@@ -22,6 +22,10 @@ backup() {
   :
 }
 
+prune() {
+  :
+}
+
 case $1 in
   help|-h|--help)
     usage
@@ -31,6 +35,9 @@ case $1 in
     ;;
   backup|b)
     backup
+    ;;
+  prune|p)
+    prune
     ;;
   *)
     usage
