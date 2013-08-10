@@ -14,9 +14,16 @@ Commands:
 EOF
 }
 
+status() {
+  :
+}
+
 case $1 in
   help|-h|--help)
     usage
+    ;;
+  status|s)
+    status
     ;;
   *)
     usage
