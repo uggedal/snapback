@@ -18,12 +18,19 @@ status() {
   :
 }
 
+backup() {
+  :
+}
+
 case $1 in
   help|-h|--help)
     usage
     ;;
   status|s)
     status
+    ;;
+  backup|b)
+    backup
     ;;
   *)
     usage
