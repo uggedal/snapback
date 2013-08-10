@@ -18,4 +18,8 @@ case $1 in
   help|-h|--help)
     usage
     ;;
+  *)
+    usage
+    exit 127
+    ;;
 esac
