@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+usage() {
+  cat <<EOF
+Usage: $0 <help|status|backup|prune>
+
+Commands:
+  status  Show number of archives, their resource usage and the date of
+          the first and last archive
+  backup  Create a new timestamped archive based on the commands and
+          paths given in /etc/snapback.conf
+  prune   Prunes archives keeping one per month, one par day this month and
+          every archive for the current day
+EOF
+}
+
+case $1 in
+  help|-h|--help)
+    usage
+    ;;
+esac
