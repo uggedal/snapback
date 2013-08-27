@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PREFIX="$(hostname)_"
+
 usage() {
   cat <<EOF
 Usage: $0 <help|status|backup|prune>
@@ -15,7 +17,40 @@ EOF
 }
 
 status() {
-  :
+  local archives="$(tarsnap --list-archives 2>/dev/null | sort -nr)"
+
+  if [ -z "$archives" ]; then
+    exit 0
+  fi
+
+  local total=$(wc -l <<<"$archives")
+  local first=$(tail -n1 <<<"$archives")
+  local last=$(head -n1 <<<"$archives")
+  local sizes=$(tarsnap --print-stats --humanize-numbers 2>/dev/null \
+                | grep -oE '[0-9.]+ [a-zA-Z]{2}')
+
+  println() {
+    printf "%-30s%20s\n" "$1:" "$2"
+  }
+
+  datefmt() {
+    local stamp=${1#$PREFIX}
+    printf $(date -d @$stamp +'%F %R')
+  }
+
+  println "Number of archives" "$total"
+  println "Total raw" "$(echo "$sizes" | sed -n 1p)"
+  println "Total compressed" "$(echo "$sizes" | sed -n 2p)"
+  println "Deduped raw" "$(echo "$sizes" | sed -n 3p)"
+  println "Deduped compressed" "$(echo "$sizes" | sed -n 4p)"
+  println "From" "$(datefmt $first)"
+  println "To" "$(datefmt $last)"
+  printf "%50s\n" | tr ' ' '-'
+
+  local width=${#total}
+  for name in ${archives}; do
+    printf "%${width}s.%$((49-$width))s\n" "$((total--))" "$(datefmt $name)\n"
+  done
 }
 
 backup() {
