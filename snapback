@@ -56,7 +56,7 @@ status() {
 
   local width=${#total}
   for name in ${archives}; do
-    printf "%${width}s.%$((49-$width))s\n" "$((total--))" "$(datefmt $name)\n"
+    printf "%${width}s.%$((49-$width))s\n" "$((total--))" "$(datefmt $name)"
   done
 }
 
