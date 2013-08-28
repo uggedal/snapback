@@ -19,8 +19,12 @@ Commands:
 EOF
 }
 
+_get_archives() {
+  tarsnap --list-archives 2>/dev/null | sort -nr
+}
+
 status() {
-  local archives="$(tarsnap --list-archives 2>/dev/null | sort -nr)"
+  local archives="$(_get_archives)"
 
   if [ -z "$archives" ]; then
     exit 0
@@ -81,6 +85,38 @@ backup() {
 }
 
 prune() {
+  local archives="$(_get_archives)"
+  local now="$(date -u +%s)"
+  local day=$((60*60*24))
+  local month=$(($day*30))
+  local -A days
+  local -A months
+
+  for archive in ${archives}; do
+    local stamp=${archive#$PREFIX}
+    local diff=$(($now - $stamp))
+
+    if [ $diff -lt $day ]; then
+      :
+    elif [ $diff -lt $month ]; then
+      local days_ago=$(($diff / $day))
+
+      if [[ ${days[$days_ago]} ]]; then
+        prune $archive
+      else
+        days[$days_ago]=1
+      fi
+
+    else
+      local months_ago=$(($diff / $month))
+
+      if [[ ${months[$months_ago]} ]]; then
+        prune $archive
+      else
+        months[$months_ago]=1
+      fi
+    fi
+  done
   :
 }
 
