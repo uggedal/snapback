@@ -92,6 +92,10 @@ prune() {
   local -A days
   local -A months
 
+  prune() {
+    tarsnap -d -f "$1" > /dev/null 2>&1
+  }
+
   for archive in ${archives}; do
     local stamp=${archive#$PREFIX}
     local diff=$(($now - $stamp))
