@@ -2,6 +2,7 @@
 
 set -e
 
+CONF=/etc/snapback.conf
 PREFIX="$(hostname)_"
 
 usage() {
@@ -12,7 +13,7 @@ Commands:
   status  Show number of archives, their resource usage and the date of
           the first and last archive
   backup  Create a new timestamped archive based on the commands and
-          paths given in /etc/snapback.conf
+          paths given in $CONF
   prune   Prunes archives keeping one per month, one par day this month and
           every archive for the current day
 EOF
