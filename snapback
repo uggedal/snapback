@@ -57,7 +57,11 @@ status() {
 }
 
 backup() {
-  :
+  if [ ! -r $CONF ]; then
+    printf "Unable to read %s\n" $CONF
+    exit 78
+  fi
+  . $CONF
 }
 
 prune() {
