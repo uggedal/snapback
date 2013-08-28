@@ -78,6 +78,6 @@ case $1 in
     ;;
   *)
     usage
-    exit 127
+    exit 64
     ;;
 esac
