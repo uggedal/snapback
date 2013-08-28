@@ -62,6 +62,22 @@ backup() {
     exit 78
   fi
   . $CONF
+
+  local name="${PREFIX}$(date -u +%s)"
+  local tmp="/tmp/$name"
+
+  trap "rm -rf \"$tmp\"" EXIT INT TERM
+
+  mkdir $tmp
+  (
+    cd $tmp
+
+    for cmd in "${CMDS[@]}"; do
+      sh -c "$cmd"
+    done
+
+    tarsnap -c -f "$name" $(find $tmp -type f) "${PATHS[@]}" &> /dev/null
+  )
 }
 
 prune() {
